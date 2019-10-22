@@ -1,0 +1,13 @@
+# conditionally assign column, if it exists
+# uses dplyr, rlang & purrr
+conditional_assign = function(df, name, x) {
+  safe_select <- safely(dplyr::select)
+  df_col = df %>% safe_select({{x}})
+  if(!is.null(df_col$result)) {
+    df = df %>% mutate(!!name := {{x}})
+    return(df)
+  } else {
+    df = df %>% mutate(!!name := NA)
+    return(df)
+  }
+}
